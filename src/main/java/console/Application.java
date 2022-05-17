@@ -46,7 +46,6 @@ public class Application {
      * @throws InvocationTargetException Если не удалось создать объект
      * @throws InstantiationException    Если не удалось создать объект
      * @throws IllegalAccessException    Нарушение прав доступа при создании объекта
-     * @todo убрать строгую привязку к packages
      */
     public Controller createController() throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
