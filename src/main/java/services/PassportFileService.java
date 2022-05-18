@@ -1,5 +1,6 @@
 package services;
 
+import models.InvalidPassportMaster;
 import models.Passport;
 
 import java.io.*;
@@ -20,7 +21,7 @@ public class PassportFileService {
         this.passportFile = new File(filePath);
     }
 
-    public int update() throws IOException, RuntimeException, SQLException {
+    public int update() throws IOException, RuntimeException {
         if (!passportFile.exists()) {
             throw new FileNotFoundException("Файл не существует " + passportFile.toPath());
         }
@@ -34,7 +35,7 @@ public class PassportFileService {
         passportService.deleteAll();
 
         BufferedReader br = new BufferedReader(new FileReader(passportFile));
-        ArrayList<Passport> passports = new ArrayList<>();
+        ArrayList<InvalidPassportMaster> passports = new ArrayList<>();
         int lineCounter = 0;
         String line;
         while ((line = br.readLine()) != null) {
@@ -47,7 +48,7 @@ public class PassportFileService {
             if (data.length != 2) {
                 throw new RuntimeException("Кол-во элементов на строке " + (++lineCounter) + " не равен 2, необходимое для обновления данных");
             }
-            passports.add(new Passport(data[0], data[1]));
+            passports.add(new InvalidPassportMaster(data[0], data[1]));
             lineCounter++;
         }
         return passportService.insert(passports);

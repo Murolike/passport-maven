@@ -1,12 +1,12 @@
 package controllers;
 
 import db.ConnectionManager;
-import models.Passport;
+import models.InvalidPassportMaster;
 import services.PassportFileService;
 import services.PassportService;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class PassportController implements Controller {
     private final PassportService passportService;
@@ -15,21 +15,21 @@ public class PassportController implements Controller {
         this.passportService = new PassportService(connectionManager);
     }
 
-    public String all() throws SQLException {
-        ArrayList<Passport> passports = passportService.all();
+    public String all() {
+        List<InvalidPassportMaster> passports = passportService.all();
         StringBuilder builder = new StringBuilder();
-        for (Passport passport : passports) {
-            builder.append(passport.getSerial()).append(" ").append(passport.getNumber()).append(" ").append(passport.getCreatedAt()).append(" \r\n");
+        for (InvalidPassportMaster passport : passports) {
+            builder.append(passport.getSeries()).append(" ").append(passport.getNumber()).append(" ").append(passport.getCreatedAt()).append(" \r\n");
         }
         return builder.toString();
     }
 
-    public String search(String serial, String number) throws SQLException {
-        Passport passport = passportService.search(serial, number);
+    public String search(String serial, String number) {
+        InvalidPassportMaster passport = passportService.search(serial, number);
         if (null == passport) {
             return "Паспорт валидный";
         }
-        return "Паспорт не валидный. Детализация: " + passport.getSerial() + " " + passport.getNumber() + " " + passport.getCreatedAt();
+        return "Паспорт не валидный. Детализация: " + passport.getSeries() + " " + passport.getNumber() + " " + passport.getCreatedAt();
     }
 
     /**
@@ -43,6 +43,7 @@ public class PassportController implements Controller {
             int counter = service.update();
             return "База данных обновлена. Обновленое следующие кол-во записей " + counter;
         } catch (Exception exception) {
+            exception.printStackTrace();
             return "Проблемы: " + exception.getMessage();
         }
     }

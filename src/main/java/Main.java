@@ -6,6 +6,7 @@ public class Main {
             Application app = new Application(args, System.out);
             app.run();
         } catch (Exception exception) {
+            exception.printStackTrace();
             System.out.println("Не удалось запустить приложение:" + exception.getMessage());
         }
     }

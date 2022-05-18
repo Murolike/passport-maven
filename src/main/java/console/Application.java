@@ -15,14 +15,14 @@ public class Application {
     protected Request request;
     protected ConnectionManager connectionManager;
 
-    public Application(String[] args, PrintStream printStream) throws SQLException {
+    public Application(String[] args, PrintStream printStream) {
         this.args = args;
         this.printStream = printStream;
 
         this.loadComponents();
     }
 
-    protected void loadComponents() throws SQLException {
+    protected void loadComponents() {
         this.loadRequest();
         this.loadConnectionManager();
     }
@@ -31,8 +31,8 @@ public class Application {
         this.request = new Request(args);
     }
 
-    protected void loadConnectionManager() throws SQLException {
-        connectionManager = new ConnectionManager("jdbc:postgresql://localhost:5432/fms", "postgres", "postgres");
+    protected void loadConnectionManager() {
+        connectionManager = new ConnectionManager();
     }
 
     public void run() throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, InstantiationException {

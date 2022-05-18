@@ -1,80 +1,70 @@
 package services;
 
 import db.ConnectionManager;
-import models.Passport;
+import models.InvalidPassportMaster;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PassportService {
     private final ConnectionManager connectionManager;
-    private final Connection connection;
+    private final Session session;
 
     public PassportService(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
-        this.connection = connectionManager.getConnection();
+        this.session = connectionManager.getSession();
     }
 
-    public ArrayList<Passport> all() throws SQLException {
-        ArrayList<Passport> passports = new ArrayList<>();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select series, number, to_char(created_at,'dd.mm.YYYY HH24:mi:ss') as created_at from invalid_passports_master limit 10");
-
-        while (resultSet.next()) {
-            Passport passport = new Passport(resultSet.getString("series"), resultSet.getString("number"), resultSet.getString("created_at"));
-            passports.add(passport);
-        }
-        return passports;
+    public List<InvalidPassportMaster> all() {
+        return session.createQuery("select m from InvalidPassportMaster m", InvalidPassportMaster.class).getResultList();
     }
 
-    public Passport search(String serial, String number) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("select series, number, to_char(created_at,'dd.mm.YYYY HH24:mi:ss') as created_at from invalid_passports_master where  series = ? and number = ? LIMIT 1");
-        statement.setString(1, serial);
-        statement.setString(2, number);
+    public InvalidPassportMaster search(String series, String number) {
+        Query<InvalidPassportMaster> query = session.createQuery("select m from InvalidPassportMaster m where series = :series and number = :number", InvalidPassportMaster.class);
+        query.setParameter("series", series);
+        query.setParameter("number", number);
 
-        ResultSet resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
-            Passport passport = new Passport(resultSet.getString("series"), resultSet.getString("number"), resultSet.getString("created_at"));
-            statement.close();
-            resultSet.close();
-
-            return passport;
+        query.setMaxResults(1);
+        List<InvalidPassportMaster> passports = query.getResultList();
+        if (passports.size() == 1) {
+            return passports.get(0);
         }
         return null;
     }
 
-    public boolean insert(Passport model) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("insert into invalid_passports_master(series,number) VALUES (?,?)");
-        statement.setString(1, model.getSerial());
-        statement.setString(2, model.getNumber());
-
-        int result = statement.executeUpdate();
-        return result > 0;
+    public void insert(InvalidPassportMaster model) {
+        session.persist(model);
     }
 
-    public int insert(ArrayList<Passport> models) throws SQLException {
-        connection.setAutoCommit(false);
+    public int insert(ArrayList<InvalidPassportMaster> models) {
+        Transaction transaction = session.beginTransaction();
         int counter = 0;
         try {
-            for (Passport passport : models) {
-                if (insert(passport)) {
-                    counter++;
-                    continue;
-                }
-                throw new SQLException("Не удалось вставить запись");
+            for (InvalidPassportMaster passport : models) {
+                insert(passport);
+                counter++;
             }
-            connection.commit();
+            transaction.commit();
         } catch (Exception exception) {
-            connection.rollback();
-            connection.setAutoCommit(true);
+            transaction.rollback();
             throw exception;
         }
 
         return counter;
     }
 
-    public void deleteAll() throws SQLException {
-        connection.createStatement().execute("delete from invalid_passports_master");
+    public void deleteAll() {
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query query = session.createQuery("delete from InvalidPassportMaster");
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception exception) {
+            transaction.rollback();
+        }
     }
 }
