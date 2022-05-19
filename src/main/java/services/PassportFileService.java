@@ -1,10 +1,11 @@
 package services;
 
-import models.InvalidPassportMaster;
+import models.MasterPassport;
 import models.Passport;
+import models.PassportData;
+import models.SlavePassport;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PassportFileService {
@@ -35,7 +36,7 @@ public class PassportFileService {
         passportService.deleteAll();
 
         BufferedReader br = new BufferedReader(new FileReader(passportFile));
-        ArrayList<InvalidPassportMaster> passports = new ArrayList<>();
+        ArrayList<Passport> passports = new ArrayList<>();
         int lineCounter = 0;
         String line;
         while ((line = br.readLine()) != null) {
@@ -48,7 +49,13 @@ public class PassportFileService {
             if (data.length != 2) {
                 throw new RuntimeException("Кол-во элементов на строке " + (++lineCounter) + " не равен 2, необходимое для обновления данных");
             }
-            passports.add(new InvalidPassportMaster(data[0], data[1]));
+            MasterPassport masterPassport = new MasterPassport();
+            SlavePassport slavePassport = new SlavePassport();
+            PassportData passportData = new PassportData(data[0], data[1]);
+            masterPassport.setPassportData(passportData);
+            slavePassport.setPassportData(passportData);
+            passports.add(masterPassport);
+            passports.add(slavePassport);
             lineCounter++;
         }
         return passportService.insert(passports);

@@ -1,12 +1,13 @@
 package services;
 
 import db.ConnectionManager;
-import models.InvalidPassportMaster;
+import models.MasterPassport;
+import models.Passport;
+import models.SlavePassport;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,32 +20,54 @@ public class PassportService {
         this.session = connectionManager.getSession();
     }
 
-    public List<InvalidPassportMaster> all() {
-        return session.createQuery("select m from InvalidPassportMaster m", InvalidPassportMaster.class).getResultList();
+    public List<Passport> all() {
+        List<MasterPassport> masterPassports = session.createQuery("select p from MasterPassport p", MasterPassport.class).getResultList();
+        List<SlavePassport> slavePassports = session.createQuery("select p from SlavePassport p", SlavePassport.class).getResultList();
+        List<Passport> passports = new ArrayList<>();
+        passports.addAll(masterPassports);
+        passports.addAll(slavePassports);
+        return passports;
     }
 
-    public InvalidPassportMaster search(String series, String number) {
-        Query<InvalidPassportMaster> query = session.createQuery("select m from InvalidPassportMaster m where series = :series and number = :number", InvalidPassportMaster.class);
-        query.setParameter("series", series);
-        query.setParameter("number", number);
+    /**
+     * @param series серия
+     * @param number номер
+     * @return Возвращает первый найденный паспорт иначе null
+     * @todo убрать дублирование
+     */
+    public Passport search(String series, String number) {
+        Query<MasterPassport> queryMaster = session.createQuery("select m from MasterPassport m where series = :series and number = :number", MasterPassport.class);
+        queryMaster.setParameter("series", series);
+        queryMaster.setParameter("number", number);
 
-        query.setMaxResults(1);
-        List<InvalidPassportMaster> passports = query.getResultList();
-        if (passports.size() == 1) {
-            return passports.get(0);
+        queryMaster.setMaxResults(1);
+        List<MasterPassport> masterPassports = queryMaster.getResultList();
+        if (masterPassports.size() == 1) {
+            return masterPassports.get(0);
         }
+        Query<SlavePassport> querySlave = session.createQuery("select m from SlavePassport m where series = :series and number = :number", SlavePassport.class);
+        querySlave.setParameter("series", series);
+        querySlave.setParameter("number", number);
+
+        querySlave.setMaxResults(1);
+        List<SlavePassport> slavePassports = querySlave.getResultList();
+        if (slavePassports.size() == 1) {
+            return slavePassports.get(0);
+        }
+
         return null;
     }
 
-    public void insert(InvalidPassportMaster model) {
+
+    public void insert(Passport model) {
         session.persist(model);
     }
 
-    public int insert(ArrayList<InvalidPassportMaster> models) {
+    public int insert(ArrayList<Passport> models) {
         Transaction transaction = session.beginTransaction();
         int counter = 0;
         try {
-            for (InvalidPassportMaster passport : models) {
+            for (Passport passport : models) {
                 insert(passport);
                 counter++;
             }
@@ -59,12 +82,16 @@ public class PassportService {
 
     public void deleteAll() {
         Transaction transaction = session.beginTransaction();
+        Query query;
         try {
-            Query query = session.createQuery("delete from InvalidPassportMaster");
+            query = session.createQuery("delete from MasterPassport");
+            query.executeUpdate();
+            query = session.createQuery("delete from SlavePassport");
             query.executeUpdate();
             transaction.commit();
         } catch (Exception exception) {
             transaction.rollback();
+            throw exception;
         }
     }
 }
