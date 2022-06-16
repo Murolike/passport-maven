@@ -1,4 +1,4 @@
-package db;
+package org.murolike.passportService.db;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

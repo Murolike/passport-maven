@@ -1,9 +1,9 @@
-package services;
+package org.murolike.passportService.services;
 
-import db.ConnectionManager;
-import models.MasterPassport;
-import models.Passport;
-import models.SlavePassport;
+import org.murolike.passportService.db.ConnectionManager;
+import org.murolike.passportService.models.MasterPassport;
+import org.murolike.passportService.models.Passport;
+import org.murolike.passportService.models.SlavePassport;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class PassportService {
     private final ConnectionManager connectionManager;
     private final Session session;

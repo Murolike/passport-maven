@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: murolike
+      changes:
+        - createTable:
+            tableName: invalid_passports_master
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: serial
+                  type: varchar(255)
+              - column:
+                  name: number
+                  type: varchar(255)
+              - column:
+                  name: created_at
+                  type: timestamp(6)
+                  defaultValueDate: now()
+  - changeSet:
+      id: 2
+      author: murolike
+      changes:
+        - createTable:
+            tableName: invalid_passports_slave
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: serial
+                  type: varchar(255)
+              - column:
+                  name: number
+                  type: varchar(255)
+              - column:
+                  name: created_at
+                  type: timestamp(6)
+                  defaultValueDate: now()

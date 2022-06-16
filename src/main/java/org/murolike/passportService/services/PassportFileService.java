@@ -1,16 +1,15 @@
-package services;
+package org.murolike.passportService.services;
 
-import db.ConnectionManager;
-import models.MasterPassport;
-import models.Passport;
-import models.PassportData;
-import models.SlavePassport;
+import org.murolike.passportService.db.ConnectionManager;
+import org.murolike.passportService.models.MasterPassport;
+import org.murolike.passportService.models.Passport;
+import org.murolike.passportService.models.PassportData;
+import org.murolike.passportService.models.SlavePassport;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
 
-@Component
 public class PassportFileService extends PassportService {
     public static final String EXTENSION_CSV = "csv";
 

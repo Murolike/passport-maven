@@ -1,4 +1,4 @@
-package models;
+package org.murolike.passportService.models;
 
 import javax.persistence.*;
 

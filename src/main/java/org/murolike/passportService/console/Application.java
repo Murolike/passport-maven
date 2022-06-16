@@ -1,13 +1,12 @@
-package console;
+package org.murolike.passportService.console;
 
-import controllers.Controller;
-import db.ConnectionManager;
+import org.murolike.passportService.controllers.Controller;
+import org.murolike.passportService.db.ConnectionManager;
 import org.springframework.context.ApplicationContext;
 
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.SQLException;
 
 public class Application {
     private final String[] args;

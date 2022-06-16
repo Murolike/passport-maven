@@ -1,8 +1,7 @@
-package console;
+package org.murolike.passportService.console;
 
 import org.springframework.stereotype.Component;
 
-@Component
 public class Request {
     private final String route;
     private final String[] args;

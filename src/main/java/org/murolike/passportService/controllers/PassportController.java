@@ -1,10 +1,10 @@
-package controllers;
+package org.murolike.passportService.controllers;
 
-import db.ConnectionManager;
-import models.Passport;
-import models.PassportData;
-import services.PassportFileService;
-import services.PassportService;
+import org.murolike.passportService.db.ConnectionManager;
+import org.murolike.passportService.models.Passport;
+import org.murolike.passportService.models.PassportData;
+import org.murolike.passportService.services.PassportFileService;
+import org.murolike.passportService.services.PassportService;
 
 import java.util.List;
 

@@ -14,8 +14,8 @@
         <property name="format_sql">true</property>
         <property name="hbm2ddl.auto">none</property>
 
-        <mapping class="models.MasterPassport"/>
-        <mapping class="models.SlavePassport"/>
+        <mapping class="org.murolike.passportService.models.MasterPassport"/>
+        <mapping class="org.murolike.passportService.models.SlavePassport"/>
 
     </session-factory>
 </hibernate-configuration>
