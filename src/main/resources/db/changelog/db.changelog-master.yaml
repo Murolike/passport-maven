@@ -14,7 +14,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: serial
+                  name: series
                   type: varchar(255)
               - column:
                   name: number
@@ -38,7 +38,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: serial
+                  name: series
                   type: varchar(255)
               - column:
                   name: number
@@ -47,3 +47,10 @@ databaseChangeLog:
                   name: created_at
                   type: timestamp(6)
                   defaultValueDate: now()
+  - changeSet:
+      id: 3
+      author: murolike
+      changes:
+        - createView:
+            viewName: vw_passport
+            selectQuery: select COALESCE(ipm.series, ips.series) as series, COALESCE(ipm.number, ips.number) as number from  invalid_passports_master ipm  full join invalid_passports_slave ips on ips.series = ipm.series and ips.number = ipm.number

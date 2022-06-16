@@ -1,16 +1,25 @@
 package org.murolike.passportService.models;
 
 import javax.persistence.*;
+import java.util.Calendar;
 
 @Entity
 @Table(name = "invalid_passports_slave")
-public class SlavePassport implements Passport{
+public class SlavePassport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @Embedded
-    protected PassportData passportData;
+    @Column
+    protected String series;
+
+    @Column
+    protected String number;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", insertable = false, updatable = false)
+    protected Calendar createdAt;
 
     public SlavePassport() {
     }
@@ -19,11 +28,23 @@ public class SlavePassport implements Passport{
         return id;
     }
 
-    public PassportData getPassportData() {
-        return passportData;
+    public String getSeries() {
+        return series;
     }
 
-    public void setPassportData(PassportData passportData) {
-        this.passportData = passportData;
+    public void setSeries(String series) {
+        this.series = series;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public Calendar getCreatedAt() {
+        return createdAt;
     }
 }
