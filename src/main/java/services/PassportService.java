@@ -7,10 +7,12 @@ import models.SlavePassport;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class PassportService {
     private final ConnectionManager connectionManager;
     private final Session session;

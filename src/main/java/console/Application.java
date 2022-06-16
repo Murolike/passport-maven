@@ -2,6 +2,7 @@ package console;
 
 import controllers.Controller;
 import db.ConnectionManager;
+import org.springframework.context.ApplicationContext;
 
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
@@ -15,24 +16,12 @@ public class Application {
     protected Request request;
     protected ConnectionManager connectionManager;
 
-    public Application(String[] args, PrintStream printStream) {
+    public Application(ApplicationContext context, PrintStream printStream, String[] args) {
+        this.request = new Request(args);
+        this.connectionManager = context.getBean(ConnectionManager.class);
         this.args = args;
         this.printStream = printStream;
 
-        this.loadComponents();
-    }
-
-    protected void loadComponents() {
-        this.loadRequest();
-        this.loadConnectionManager();
-    }
-
-    protected void loadRequest() {
-        this.request = new Request(args);
-    }
-
-    protected void loadConnectionManager() {
-        connectionManager = new ConnectionManager();
     }
 
     public void run() throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, InstantiationException {

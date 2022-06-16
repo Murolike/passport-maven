@@ -10,9 +10,11 @@ import java.util.List;
 
 public class PassportController implements Controller {
     private final PassportService passportService;
+    private final PassportFileService passportFileService;
 
     public PassportController(ConnectionManager connectionManager) {
         this.passportService = new PassportService(connectionManager);
+        this.passportFileService = new PassportFileService(connectionManager);
     }
 
     public String all() {
@@ -41,8 +43,7 @@ public class PassportController implements Controller {
      */
     public String update(String filePath) {
         try {
-            PassportFileService service = new PassportFileService(filePath, passportService);
-            int counter = service.update();
+            int counter = passportFileService.update(filePath);
             return "База данных обновлена. Обновленое следующие кол-во записей " + counter;
         } catch (Exception exception) {
             exception.printStackTrace();

@@ -1,5 +1,8 @@
 package console;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Request {
     private final String route;
     private final String[] args;

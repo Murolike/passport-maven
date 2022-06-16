@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <bean id="connectionManager" class="db.ConnectionManager"/>
+    <bean id="passportService" class="services.PassportService">
+        <constructor-arg ref="connectionManager"/>
+    </bean>
+<!--    <bean id="request" class="console.Request"/>-->
+
+<!--        <bean id="passportFileService" class="services.PassportFileService"/>-->
+</beans>

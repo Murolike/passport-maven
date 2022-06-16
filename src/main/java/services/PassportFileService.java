@@ -1,28 +1,28 @@
 package services;
 
+import db.ConnectionManager;
 import models.MasterPassport;
 import models.Passport;
 import models.PassportData;
 import models.SlavePassport;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
 
-public class PassportFileService {
+@Component
+public class PassportFileService extends PassportService {
     public static final String EXTENSION_CSV = "csv";
 
-    protected String filePath;
-    protected PassportService passportService;
-
-    protected File passportFile;
-
-    public PassportFileService(String filePath, PassportService passportService) {
-        this.filePath = filePath;
-        this.passportService = passportService;
-        this.passportFile = new File(filePath);
+    public PassportFileService(ConnectionManager connectionManager) {
+        super(connectionManager);
     }
 
-    public int update() throws IOException, RuntimeException {
+    public int update(String filePath) throws IOException, RuntimeException {
+        File passportFile = new File(filePath);
+        String name = passportFile.getName();
+        String extension = name.substring(name.lastIndexOf(".") + 1);
+
         if (!passportFile.exists()) {
             throw new FileNotFoundException("Файл не существует " + passportFile.toPath());
         }
@@ -30,10 +30,11 @@ public class PassportFileService {
             throw new RuntimeException("Не возможно прочитать файл " + passportFile.toPath());
         }
 
-        if (!EXTENSION_CSV.equalsIgnoreCase(getFileExtension())) {
+        if (!EXTENSION_CSV.equalsIgnoreCase(extension)) {
             throw new RuntimeException("Формат файла должен быть CSV");
         }
-        passportService.deleteAll();
+
+        deleteAll();
 
         BufferedReader br = new BufferedReader(new FileReader(passportFile));
         ArrayList<Passport> passports = new ArrayList<>();
@@ -58,11 +59,6 @@ public class PassportFileService {
             passports.add(slavePassport);
             lineCounter++;
         }
-        return passportService.insert(passports);
-    }
-
-    protected String getFileExtension() {
-        String name = passportFile.getName();
-        return name.substring(name.lastIndexOf(".") + 1);
+        return insert(passports);
     }
 }
