@@ -54,3 +54,17 @@ databaseChangeLog:
         - createView:
             viewName: vw_passport
             selectQuery: select COALESCE(ipm.series, ips.series) as series, COALESCE(ipm.number, ips.number) as number from  invalid_passports_master ipm  full join invalid_passports_slave ips on ips.series = ipm.series and ips.number = ipm.number
+  - changeSet:
+      id: 4
+      author: murolike
+      changes:
+        - dropView:
+            viewName: vw_passport
+        - createView:
+            viewName: vw_passport
+            replaceIfExists: true
+            selectQuery:  "SELECT
+  row_number() over (order by COALESCE(ipm.created_at, ips.created_at)) as id, COALESCE(ipm.series, ips.series) AS series,
+  COALESCE(ipm.number, ips.number) AS number
+  FROM invalid_passports_master ipm
+  FULL JOIN invalid_passports_slave ips ON ips.series::text = ipm.series::text AND ips.number::text = ipm.number::text"

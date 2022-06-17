@@ -24,6 +24,11 @@ public class MasterPassport {
     public MasterPassport() {
     }
 
+    public MasterPassport(String series, String number) {
+        this.series = series;
+        this.number = number;
+    }
+
     public Long getId() {
         return id;
     }

@@ -24,6 +24,11 @@ public class SlavePassport {
     public SlavePassport() {
     }
 
+    public SlavePassport(String series, String number) {
+        this.series = series;
+        this.number = number;
+    }
+
     public Long getId() {
         return id;
     }

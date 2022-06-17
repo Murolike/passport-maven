@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MasterPassportRepository extends CrudRepository<MasterPassport, Long> {
-    Iterable<MasterPassport> findBySeriesAndNumber(String series, String number);
+    Iterable<MasterPassport> findAllBySeriesAndNumber(String series, String number);
 }

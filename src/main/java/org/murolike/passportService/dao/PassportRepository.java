@@ -7,5 +7,5 @@ import org.springframework.data.repository.Repository;
 public interface PassportRepository extends Repository<Passport, Integer> {
     Iterable<Passport> findAll();
 
-    Iterable<Passport> findBySeriesAndNumber(String series, String number);
+    Iterable<Passport> findAllBySeriesAndNumber(String series, String number);
 }
