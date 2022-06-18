@@ -39,7 +39,7 @@ class MasterPassportServiceTest {
     @BeforeEach
     void setUp() {
         passport = new MasterPassport("0011", "001122");
-        passportList = List.of(passport);
+        passportList = Arrays.asList(passport);
     }
 
     @AfterEach

@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,7 +38,7 @@ class SlavePassportServiceTest {
     @BeforeEach
     void setUp() {
         passport = new SlavePassport("1100", "221100");
-        passportList = List.of(passport);
+        passportList = Arrays.asList(passport);
     }
 
     @AfterEach
