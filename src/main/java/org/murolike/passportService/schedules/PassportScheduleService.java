@@ -1,7 +1,7 @@
 package org.murolike.passportService.schedules;
 
-import org.murolike.passportService.services.MasterPassportFileUpdateService;
-import org.murolike.passportService.services.SlavePassportFileUpdateService;
+import org.murolike.passportService.services.MasterPassportUpdateFileService;
+import org.murolike.passportService.services.SlavePassportUpdateFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,12 @@ public class PassportScheduleService {
     private final Logger logger = LoggerFactory.getLogger(PassportScheduleService.class);
 
     @Autowired
-    private final MasterPassportFileUpdateService masterPassportFileUpdateService;
+    private final MasterPassportUpdateFileService masterPassportFileUpdateService;
 
     @Autowired
-    private final SlavePassportFileUpdateService slavePassportFileUpdateService;
+    private final SlavePassportUpdateFileService slavePassportFileUpdateService;
 
-    public PassportScheduleService(MasterPassportFileUpdateService masterPassportFileUpdateService, SlavePassportFileUpdateService slavePassportFileUpdateService) {
+    public PassportScheduleService(MasterPassportUpdateFileService masterPassportFileUpdateService, SlavePassportUpdateFileService slavePassportFileUpdateService) {
         this.masterPassportFileUpdateService = masterPassportFileUpdateService;
         this.slavePassportFileUpdateService = slavePassportFileUpdateService;
     }
@@ -37,7 +37,7 @@ public class PassportScheduleService {
         }
     }
 
-    @Scheduled(cron = "0 5 * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     public void runSlavePassportUpdater() {
         try {
             logger.info("Запущена процедура обновления дополнительных паспортов");
