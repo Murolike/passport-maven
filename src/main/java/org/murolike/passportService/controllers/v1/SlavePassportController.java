@@ -1,6 +1,5 @@
 package org.murolike.passportService.controllers.v1;
 
-import org.murolike.passportService.dao.SlavePassportRepository;
 import org.murolike.passportService.models.SlavePassport;
 import org.murolike.passportService.services.SlavePassportService;
 import org.springframework.beans.factory.annotation.Autowired;
