@@ -11,14 +11,11 @@ abstract public class PassportUpdateFileService {
     @Transactional
     public void run(File passportUpdateFile) throws IOException {
         deleteAll();
-        try (Stream<String> stream = Files.lines(passportUpdateFile.toPath())) {
-            stream.skip(1).forEach(line -> {
-                String[] data = line.split(",");
-                save(data[0], data[1]);
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Stream<String> stream = Files.lines(passportUpdateFile.toPath());
+        stream.skip(1).forEach(line -> {
+            String[] data = line.split(",");
+            save(data[0], data[1]);
+        });
     }
 
     abstract protected void deleteAll();
