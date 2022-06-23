@@ -1,6 +1,7 @@
-package org.murolike.passportService.services;
+package org.murolike.passportService.services.file;
 
 import org.murolike.passportService.models.SlavePassport;
+import org.murolike.passportService.services.SlavePassportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

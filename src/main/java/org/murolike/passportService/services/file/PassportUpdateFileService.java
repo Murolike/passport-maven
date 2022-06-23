@@ -1,12 +1,11 @@
-package org.murolike.passportService.services;
+package org.murolike.passportService.services.file;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 abstract public class PassportUpdateFileService {
@@ -15,10 +14,9 @@ abstract public class PassportUpdateFileService {
     protected String resourcePath;
 
     @Transactional
-    public void run() throws IOException {
-        URL fileUrl = getClass().getClassLoader().getResource(resourcePath);
+    public void run(File passportUpdateFile) throws IOException {
         deleteAll();
-        try (Stream<String> stream = Files.lines(Paths.get(fileUrl.getFile()))) {
+        try (Stream<String> stream = Files.lines(passportUpdateFile.toPath())) {
             stream.skip(1).forEach(line -> {
                 String[] data = line.split(",");
                 save(data[0], data[1]);
