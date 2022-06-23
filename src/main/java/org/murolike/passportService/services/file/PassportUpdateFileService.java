@@ -1,6 +1,5 @@
 package org.murolike.passportService.services.file;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -9,10 +8,6 @@ import java.nio.file.Files;
 import java.util.stream.Stream;
 
 abstract public class PassportUpdateFileService {
-
-    @Value("${passport.storage.filePath}")
-    protected String resourcePath;
-
     @Transactional
     public void run(File passportUpdateFile) throws IOException {
         deleteAll();
