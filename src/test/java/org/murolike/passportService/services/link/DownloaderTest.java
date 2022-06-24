@@ -18,5 +18,6 @@ class DownloaderTest {
 
         assertTrue(archive.exists());
         assertTrue(archive.length() > 0);
+        archive.delete();
     }
 }

@@ -38,7 +38,6 @@ public class PassportScheduleService {
         this.slavePassportFileUpdateService = slavePassportFileUpdateService;
     }
 
-    @Scheduled(cron = "0 5 * * * *")
     public void runMasterPassportUpdater() {
         try {
             logger.info("Запущена процедура обновления основных паспортов");
@@ -50,13 +49,12 @@ public class PassportScheduleService {
         }
     }
 
-    @Scheduled(cron = "0 5 * * * *")
     public void runSlavePassportUpdater() {
         try {
-            logger.info("Запущена процедура обновления основных паспортов");
+            logger.info("Запущена процедура обновления дополнительных паспортов");
             File passportUpdateFile = new File(getClass().getClassLoader().getResource(passportUpdateFilePath).getFile());
-            masterPassportFileUpdateService.run(passportUpdateFile);
-            logger.info("Процедура обновления основных паспортов завершена");
+            slavePassportFileUpdateService.run(passportUpdateFile);
+            logger.info("Процедура обновления дополнительных паспортов завершена");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -65,12 +63,15 @@ public class PassportScheduleService {
     @Scheduled(cron = "0 5 * * * *")
     public void runMasterPassportUpdaterInternet() {
         try {
-            logger.info("Запущена процедура обновления дополнительных паспортов");
+            logger.info("Запущена процедура обновления основных паспортов");
             Downloader downloader = new Downloader(passportUpdateFileLink, System.getProperty("java.io.tmpdir") + "/");
-            Bzip2 bzip2 = new Bzip2(downloader.download());
+            File archive = downloader.download();
+            Bzip2 bzip2 = new Bzip2(archive);
             File passportUpdateFile = bzip2.unzip();
             masterPassportFileUpdateService.run(passportUpdateFile);
-            logger.info("Процедура обновления дополнительных паспортов завершена");
+            archive.delete();
+            passportUpdateFile.delete();
+            logger.info("Процедура обновления основных паспортов завершена");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,9 +82,12 @@ public class PassportScheduleService {
         try {
             logger.info("Запущена процедура обновления дополнительных паспортов");
             Downloader downloader = new Downloader(passportUpdateFileLink, System.getProperty("java.io.tmpdir") + "/");
-            Bzip2 bzip2 = new Bzip2(downloader.download());
+            File archive = downloader.download();
+            Bzip2 bzip2 = new Bzip2(archive);
             File passportUpdateFile = bzip2.unzip();
             slavePassportFileUpdateService.run(passportUpdateFile);
+            archive.delete();
+            passportUpdateFile.delete();
             logger.info("Процедура обновления дополнительных паспортов завершена");
         } catch (IOException e) {
             e.printStackTrace();

@@ -19,5 +19,6 @@ class Bzip2Test {
         File base = bzip2.unzip();
         assertTrue(base.exists());
         assertTrue(base.length() > 0);
+        base.delete();
     }
 }
