@@ -1,6 +1,7 @@
 package org.murolike.passportService.services.link;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +19,5 @@ class Bzip2Test {
         File base = bzip2.unzip();
         assertTrue(base.exists());
         assertTrue(base.length() > 0);
-        assertEquals("list_of_expired_passports.csv", base.getName());
-
     }
 }

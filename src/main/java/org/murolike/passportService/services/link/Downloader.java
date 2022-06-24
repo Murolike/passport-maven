@@ -7,11 +7,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
- * TODO: Возможно использовать File.createTemporaryFile чтобы избавиться от storagePath и от генерации имени
+ * TODO: Возможно использовать File.createTemporaryFile
  */
 public class Downloader {
     protected URL link;
@@ -34,22 +32,13 @@ public class Downloader {
     }
 
     protected File createFile() throws IOException {
-        File file = new File(this.storagePath + this.generateFileName());
-        if (file.exists() && !file.delete()) {
-            throw new IOException("Не могу удалить файл по пути: " + file.getAbsolutePath());
-        }
-        return file;
+        return File.createTempFile("tmp", getExtensions(), new File(this.storagePath));
     }
 
-    protected String getShortFileName() {
+    protected String getExtensions() {
         File file = new File(this.link.getFile());
-        return file.getName();
-    }
+        String name = file.getName();
 
-    protected String generateFileName() {
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
-
-        return dateTime.format(dateTimeFormatter) + "_" + getShortFileName();
+        return name.substring(name.indexOf("."));
     }
 }

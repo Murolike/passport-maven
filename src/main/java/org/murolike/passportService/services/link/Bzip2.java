@@ -21,6 +21,7 @@ public class Bzip2 {
     /**
      * Метод для разорхивации файлов
      * TODO: при переходе на >8 версии, использовать transferTo
+     *
      * @return Возвращает ссылку на единственный файл внутри
      * @throws IOException Возникает когда файл не был найден
      */
@@ -46,14 +47,11 @@ public class Bzip2 {
      * Создает файл, если он есть, то удалит
      *
      * @return Возвращает файл
-     * @throws IOException Возникает, когда не удалось удалить существующий файл
+     * @throws IOException Возникает, когда не удалось создать файл
      */
     protected File createFile() throws IOException {
-        File file = new File(this.getUncompressedFilePath());
-        if (file.exists() && !file.delete()) {
-            throw new IOException("Не могу удалить файл по пути: " + file.getAbsolutePath());
-        }
-        return file;
+        String extension = this.getExtensionFile();
+        return File.createTempFile("tmp", extension, archive.getParentFile());
     }
 
     /**
@@ -64,5 +62,10 @@ public class Bzip2 {
     protected String getUncompressedFilePath() {
         String path = this.archive.getAbsolutePath();
         return path.substring(0, path.lastIndexOf("."));
+    }
+
+    protected String getExtensionFile() {
+        String path = this.getUncompressedFilePath();
+        return path.substring(path.lastIndexOf("."));
     }
 }
