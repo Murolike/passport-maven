@@ -111,3 +111,19 @@ databaseChangeLog:
                   name: is_successful
                   type: int(1)
                   defaultValue: 1
+  - changeSet:
+      id: 7
+      author: murolike
+      changes:
+        - addColumn:
+            tableName: log_request_search
+            columns:
+              - column:
+                  name: search_in_table
+                  type: varchar(255)
+        - update:
+            tableName: log_request_search
+            columns:
+              - column:
+                  name: search_in_table
+                  value: invalid_passports_master

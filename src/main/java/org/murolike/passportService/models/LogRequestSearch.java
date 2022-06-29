@@ -30,6 +30,9 @@ public class LogRequestSearch {
     @Column(name = "is_successful")
     private Integer isSuccessful;
 
+    @Column(name = "search_in_table")
+    private String searchInTable;
+
     public LogRequestSearch() {
     }
 
@@ -37,6 +40,13 @@ public class LogRequestSearch {
         this.series = series;
         this.number = number;
         this.requestIp = requestIp;
+    }
+
+    public LogRequestSearch(String series, String number, String requestIp, String searchInTable) {
+        this.series = series;
+        this.number = number;
+        this.requestIp = requestIp;
+        this.searchInTable = searchInTable;
     }
 
     public Long getId() {
@@ -73,5 +83,21 @@ public class LogRequestSearch {
 
     public void setIsSuccessful(Integer isSuccessful) {
         this.isSuccessful = isSuccessful;
+    }
+
+    public void setSeries(String series) {
+        this.series = series;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
+    }
+
+    public void setSearchInTable(String searchInTable) {
+        this.searchInTable = searchInTable;
     }
 }
