@@ -63,8 +63,51 @@ databaseChangeLog:
         - createView:
             viewName: vw_passport
             replaceIfExists: true
-            selectQuery:  "SELECT
+            selectQuery: "SELECT
   row_number() over (order by COALESCE(ipm.created_at, ips.created_at)) as id, COALESCE(ipm.series, ips.series) AS series,
   COALESCE(ipm.number, ips.number) AS number
   FROM invalid_passports_master ipm
   FULL JOIN invalid_passports_slave ips ON ips.series::text = ipm.series::text AND ips.number::text = ipm.number::text"
+  - changeSet:
+      id: 5
+      author: murolike
+      changes:
+        - createTable:
+            tableName: log_request_search
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: series
+                  type: varchar(255)
+              - column:
+                  name: number
+                  type: varchar(255)
+              - column:
+                  name: request_ip
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp(6)
+                  defaultValueDate: now()
+  - changeSet:
+      id: 6
+      author: murolike
+      changes:
+        - addColumn:
+            tableName: log_request_search
+            columns:
+              - column:
+                  name: search_result
+                  type: text
+              - column:
+                  name: is_successful
+                  type: int(1)
+                  defaultValue: 1
