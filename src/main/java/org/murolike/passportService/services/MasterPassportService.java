@@ -29,4 +29,16 @@ public class MasterPassportService {
     public void deleteAll() {
         this.repository.deleteAll();
     }
+
+    public void deleteNotExistingInLoadingTable() {
+        this.repository.deleteNotExistingInLoadingTable();
+    }
+
+    public void insertNotExistingDataFromLoadingTable() {
+        this.repository.insertNotExistingDataFromLoadingTable();
+    }
+
+    public void updateLastDateOnFileExistDataFromLoadingTable() {
+        this.repository.updateLastDateOnFileExistDataFromLoadingTable();
+    }
 }

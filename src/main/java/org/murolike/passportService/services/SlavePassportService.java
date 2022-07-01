@@ -1,8 +1,6 @@
 package org.murolike.passportService.services;
 
-import org.murolike.passportService.dao.MasterPassportRepository;
 import org.murolike.passportService.dao.SlavePassportRepository;
-import org.murolike.passportService.models.MasterPassport;
 import org.murolike.passportService.models.SlavePassport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,5 +28,17 @@ public class SlavePassportService {
 
     public void deleteAll() {
         this.repository.deleteAll();
+    }
+
+    public void deleteNotExistingInLoadingTable() {
+        this.repository.deleteNotExistingInLoadingTable();
+    }
+
+    public void insertNotExistingDataFromLoadingTable() {
+        this.repository.insertNotExistingDataFromLoadingTable();
+    }
+
+    public void updateLastDateOnFileExistDataFromLoadingTable() {
+        this.repository.updateLastDateOnFileExistDataFromLoadingTable();
     }
 }

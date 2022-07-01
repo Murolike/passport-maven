@@ -4,6 +4,9 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 
 import java.io.*;
 
+/**
+ * Low speed unzip
+ */
 public class Bzip2 {
     /**
      * Буфер

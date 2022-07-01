@@ -127,3 +127,63 @@ databaseChangeLog:
               - column:
                   name: search_in_table
                   value: invalid_passports_master
+  - changeSet:
+      id: 8
+      author: murolike
+      changes:
+        - createTable:
+            tableName: tmp_passports
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: serial
+                  type: varchar(255)
+              - column:
+                  name: number
+                  type: varchar(255)
+              - column:
+                  name: created_at
+                  type: timestamp(6)
+                  defaultValueDate: now()
+  - changeSet:
+      id: 9
+      author: murolike
+      changes:
+        - renameColumn:
+            tableName: tmp_passports
+            newColumnName: series
+            oldColumnName: serial
+  - changeSet:
+      id: 10
+      author: murolike
+      changes:
+        - addColumn:
+            tableName: invalid_passports_master
+            columns:
+              - column:
+                  name: last_date_on_file
+                  type: timestamp(6)
+        - addColumn:
+            tableName: invalid_passports_slave
+            columns:
+              - column:
+                  name: last_date_on_file
+                  type: timestamp(6)
+  - changeSet:
+      id: 11
+      author: murolike
+      changes:
+        - renameColumn:
+            tableName: invalid_passports_master
+            oldColumnName: last_date_on_file
+            newColumnName: was_in_file_from_date
+        - renameColumn:
+            tableName: invalid_passports_slave
+            oldColumnName: last_date_on_file
+            newColumnName: was_in_file_from_date

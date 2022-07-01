@@ -10,6 +10,7 @@ import java.nio.channels.ReadableByteChannel;
 
 /**
  * TODO: Возможно использовать File.createTemporaryFile
+ * Low speed download
  */
 public class Downloader {
     protected URL link;
