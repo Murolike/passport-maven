@@ -41,4 +41,8 @@ public class SlavePassportService {
     public void updateLastDateOnFileExistDataFromLoadingTable() {
         this.repository.updateLastDateOnFileExistDataFromLoadingTable();
     }
+
+    public void vacuumTable() {
+        this.repository.vacuumTable();
+    }
 }

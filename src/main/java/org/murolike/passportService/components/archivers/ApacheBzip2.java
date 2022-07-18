@@ -1,53 +1,48 @@
-package org.murolike.passportService.services.link;
+package org.murolike.passportService.components.archivers;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 
 import java.io.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 /**
- * Low speed unzip
+ * Класс для работы с архивами с помощью функционала Apache Bzip2
  */
-public class Bzip2 {
-    /**
-     * Буфер
-     */
-    public static Integer BUFFER_SIZE = 2048;
+public class ApacheBzip2 implements Archiver {
     /**
      * Архивный файл
      */
     protected File archive;
 
-    public Bzip2(File archive) {
+    public ApacheBzip2(File archive) {
         this.archive = archive;
     }
 
     /**
      * Метод для разорхивации файлов
-     * TODO: при переходе на >8 версии, использовать transferTo
      *
      * @return Возвращает ссылку на единственный файл внутри
      * @throws IOException Возникает когда файл не был найден
      */
+    @Override
     public File unzip() throws IOException {
         File file = this.createFile();
         BZip2CompressorInputStream bZipInputStream = new BZip2CompressorInputStream(new FileInputStream(this.archive), true);
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-//        bZipInputStream.transferTo(fileOutputStream);
+        ReadableByteChannel readableByteChannel = Channels.newChannel(bZipInputStream);
 
-        final byte[] buffer = new byte[BUFFER_SIZE];
-        int n;
-        while (-1 != (n = bZipInputStream.read(buffer))) {
-            fileOutputStream.write(buffer, 0, n);
-        }
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
 
         fileOutputStream.close();
         bZipInputStream.close();
+
 
         return file;
     }
 
     /**
-     * Создает файл, если он есть, то удалит
+     * Создает временный файл с расширением
      *
      * @return Возвращает файл
      * @throws IOException Возникает, когда не удалось создать файл

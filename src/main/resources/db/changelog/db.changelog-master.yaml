@@ -187,3 +187,50 @@ databaseChangeLog:
             tableName: invalid_passports_slave
             oldColumnName: last_date_on_file
             newColumnName: was_in_file_from_date
+  - changeSet:
+      id: 12
+      author: murolike
+      changes:
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE invalid_passports_master SET ( fillfactor = 20);
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE invalid_passports_slave SET ( fillfactor = 20);
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE tmp_passports SET ( fillfactor = 20);
+  - changeSet:
+      id: 13
+      author: murolike
+      changes:
+        - createIndex:
+            indexName: idx_i_p_m_s_n
+            tableName: invalid_passports_master
+            columns:
+              - column:
+                  descending: false
+                  name: series
+              - column:
+                  descending: false
+                  name: number
+        - createIndex:
+            indexName: idx_i_p_s_s_n
+            tableName: invalid_passports_slave
+            columns:
+              - column:
+                  descending: false
+                  name: series
+              - column:
+                  descending: false
+                  name: number
+        - createIndex:
+            indexName: idx_t_p_s_n
+            tableName: tmp_passports
+            columns:
+              - column:
+                  descending: false
+                  name: series
+              - column:
+                  descending: false
+                  name: number

@@ -1,13 +1,17 @@
-package org.murolike.passportService.components;
+package org.murolike.passportService.components.pg;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+/**
+ * Компонент для быстрого получения данных по подключению к СУБД
+ * Нужен для работы PgLoader
+ */
 @Component
 public class DatabaseEnvironment {
     @Autowired
-    private Environment environment;
+    private final Environment environment;
 
     public DatabaseEnvironment(Environment environment) {
         this.environment = environment;

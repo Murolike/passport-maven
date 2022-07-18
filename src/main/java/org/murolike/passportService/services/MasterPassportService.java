@@ -4,6 +4,7 @@ import org.murolike.passportService.dao.MasterPassportRepository;
 import org.murolike.passportService.models.MasterPassport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MasterPassportService {
@@ -40,5 +41,9 @@ public class MasterPassportService {
 
     public void updateLastDateOnFileExistDataFromLoadingTable() {
         this.repository.updateLastDateOnFileExistDataFromLoadingTable();
+    }
+
+    public void vacuumTable() {
+        this.repository.vacuumTable();
     }
 }
