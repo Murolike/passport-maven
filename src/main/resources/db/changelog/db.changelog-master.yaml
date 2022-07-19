@@ -309,3 +309,22 @@ databaseChangeLog:
         - sql:
             dbms: 'postgresql'
             sql: ALTER TABLE invalid_passports_slave ALTER COLUMN id SET DEFAULT nextval('invalid_passports_id_seq');
+  - changeSet:
+      id: 20
+      author: murolike
+      changes:
+        - dropView:
+            viewName: vw_passport
+        - createView:
+            viewName: vw_passport
+            replaceIfExists: true
+            selectQuery: "SELECT
+   COALESCE(ipm.id, ips.id) as id,
+   COALESCE(ipm.series, ips.series) AS series,
+   COALESCE(ipm.number, ips.number) AS number,
+   CASE 
+        WHEN ipm.id is NOT NULL THEN 'master' 
+        ELSE 'slave' 
+   END as source
+   FROM invalid_passports_master ipm
+   FULL JOIN invalid_passports_slave ips ON ips.series::text = ipm.series::text AND ips.number::text = ipm.number::text"

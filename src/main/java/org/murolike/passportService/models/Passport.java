@@ -12,6 +12,7 @@ public class Passport {
 
     private String series;
     private String number;
+    private String source;
 
     public Passport() {
     }
@@ -31,5 +32,9 @@ public class Passport {
 
     public String getNumber() {
         return number;
+    }
+
+    public String getSource() {
+        return source;
     }
 }
