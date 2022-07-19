@@ -1,5 +1,6 @@
 package org.murolike.passportService.components.pg;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -13,7 +14,7 @@ public class PgConfiguration {
     protected String port;
     protected String dbName;
     protected String tableName;
-    protected Set<String> columns;
+    protected Set<String> columns = new LinkedHashSet<>();
 
     public PgConfiguration() {
     }

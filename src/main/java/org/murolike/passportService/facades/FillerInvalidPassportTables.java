@@ -2,6 +2,8 @@ package org.murolike.passportService.facades;
 
 import org.murolike.passportService.services.MasterPassportService;
 import org.murolike.passportService.services.SlavePassportService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,8 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class FillerInvalidPassportTables {
 
+    @Autowired
     private final MasterPassportService masterPassportService;
+
+    @Autowired
     private final SlavePassportService slavePassportService;
+
 
     public FillerInvalidPassportTables(MasterPassportService masterPassportService, SlavePassportService slavePassportService) {
         this.masterPassportService = masterPassportService;

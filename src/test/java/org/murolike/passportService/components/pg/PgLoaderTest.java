@@ -27,20 +27,21 @@ class PgLoaderTest {
     public String tempTable = "tmp_passports";
 
     private final static String archiveFileName = "list_of_expired_passports.csv.bz2";
-    private final static String listOfExpiredPassportsFileName = "short-list_of_expired_passports.csv";
+    private final static String shortExpiredPassportsFileName = "short-list_of_expired_passports.csv";
 
-    private URL archiveListOfExpiredPassportsPath;
-    private URL csvListOfExpiredPassportsPath;
+    private URL archiveExpiredPassportsPath;
+    private URL shortExpiredPassportsPath;
+
 
     @BeforeEach
     void setUp() throws FileNotFoundException {
-        archiveListOfExpiredPassportsPath = this.getClass().getClassLoader().getResource(archiveFileName);
-        if (null == archiveListOfExpiredPassportsPath) {
+        archiveExpiredPassportsPath = this.getClass().getClassLoader().getResource(archiveFileName);
+        if (null == archiveExpiredPassportsPath) {
             throw new FileNotFoundException("Не удалось найти файл в папке с ресурсами для тестов: " + archiveFileName);
         }
-        csvListOfExpiredPassportsPath = this.getClass().getClassLoader().getResource(listOfExpiredPassportsFileName);
-        if (null == csvListOfExpiredPassportsPath) {
-            throw new FileNotFoundException("Не удалось найти файл в папке с ресурсами для тестов: " + listOfExpiredPassportsFileName);
+        shortExpiredPassportsPath = this.getClass().getClassLoader().getResource(shortExpiredPassportsFileName);
+        if (null == shortExpiredPassportsPath) {
+            throw new FileNotFoundException("Не удалось найти файл в папке с ресурсами для тестов: " + shortExpiredPassportsFileName);
         }
     }
 
@@ -51,23 +52,23 @@ class PgLoaderTest {
     @Test
     void whenCompleteLoadFileThenSuccess() {
         assertDoesNotThrow(() -> {
-                PgConfigurationBuilder builder = new PgConfigurationBuilder();
-                LinkedHashSet<String> columns = new LinkedHashSet<>();
-                columns.add("series");
-                columns.add("number");
-                PgConfiguration configuration = builder.create()
-                        .host(environment.getHost())
-                        .port(environment.getPort())
-                        .username(environment.getUserName())
-                        .password(environment.getPassword())
-                        .dbName(environment.getDbName())
-                        .tableName(tempTable)
-                        .columns(columns)
-                        .build();
+            PgConfigurationBuilder builder = new PgConfigurationBuilder();
+            LinkedHashSet<String> columns = new LinkedHashSet<>();
+            columns.add("series");
+            columns.add("number");
+            PgConfiguration configuration = builder.create()
+                    .host(environment.getHost())
+                    .port(environment.getPort())
+                    .username(environment.getUserName())
+                    .password(environment.getPassword())
+                    .dbName(environment.getDbName())
+                    .tableName(tempTable)
+                    .columns(columns)
+                    .build();
 
-                File file = new File(csvListOfExpiredPassportsPath.getFile());
+            File file = new File(shortExpiredPassportsPath.getFile());
 
-                pgLoader.run(file, configuration);
+            pgLoader.run(file, configuration);
         });
     }
 
@@ -88,7 +89,28 @@ class PgLoaderTest {
                     .columns(columns)
                     .build();
 
-            File file = new File(archiveListOfExpiredPassportsPath.getFile());
+            File file = new File(archiveExpiredPassportsPath.getFile());
+
+            pgLoader.run(file, configuration);
+        });
+    }
+
+    @Test
+    void whenWrongFileThrowException() {
+        assertThrows(PgLoaderException.class, () -> {
+            PgConfigurationBuilder builder = new PgConfigurationBuilder();
+            LinkedHashSet<String> columns = new LinkedHashSet<>();
+            PgConfiguration configuration = builder.create()
+                    .host(environment.getHost())
+                    .port(environment.getPort())
+                    .username(environment.getUserName())
+                    .password(environment.getPassword())
+                    .dbName(environment.getDbName())
+                    .tableName(tempTable)
+                    .columns(columns)
+                    .build();
+
+            File file = new File(shortExpiredPassportsPath.getFile());
 
             pgLoader.run(file, configuration);
         });

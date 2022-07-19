@@ -100,4 +100,8 @@ public class LogRequestSearch {
     public void setSearchInTable(String searchInTable) {
         this.searchInTable = searchInTable;
     }
+
+    public String getSearchInTable() {
+        return this.searchInTable;
+    }
 }

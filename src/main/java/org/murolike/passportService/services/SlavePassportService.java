@@ -3,6 +3,7 @@ package org.murolike.passportService.services;
 import org.murolike.passportService.dao.SlavePassportRepository;
 import org.murolike.passportService.models.SlavePassport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,8 +11,12 @@ public class SlavePassportService {
     @Autowired
     private final SlavePassportRepository repository;
 
-    public SlavePassportService(SlavePassportRepository repository) {
+    @Autowired
+    private final JdbcTemplate jdbcTemplate;
+
+    public SlavePassportService(SlavePassportRepository repository, JdbcTemplate jdbcTemplate) {
         this.repository = repository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Iterable<SlavePassport> findAll() {
@@ -43,6 +48,6 @@ public class SlavePassportService {
     }
 
     public void vacuumTable() {
-        this.repository.vacuumTable();
+        jdbcTemplate.execute("VACUUM (analyze) invalid_passports_slave");
     }
 }

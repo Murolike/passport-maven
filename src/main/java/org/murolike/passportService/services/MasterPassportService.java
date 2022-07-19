@@ -3,16 +3,20 @@ package org.murolike.passportService.services;
 import org.murolike.passportService.dao.MasterPassportRepository;
 import org.murolike.passportService.models.MasterPassport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MasterPassportService {
     @Autowired
     private final MasterPassportRepository repository;
 
-    public MasterPassportService(MasterPassportRepository repository) {
+    @Autowired
+    private final JdbcTemplate jdbcTemplate;
+
+    public MasterPassportService(MasterPassportRepository repository, JdbcTemplate jdbcTemplate) {
         this.repository = repository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Iterable<MasterPassport> findAll() {
@@ -44,6 +48,6 @@ public class MasterPassportService {
     }
 
     public void vacuumTable() {
-        this.repository.vacuumTable();
+        jdbcTemplate.execute("VACUUM (analyze) invalid_passports_master");
     }
 }

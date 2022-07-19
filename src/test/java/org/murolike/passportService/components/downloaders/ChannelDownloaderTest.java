@@ -1,4 +1,4 @@
-package org.murolike.passportService.services.link;
+package org.murolike.passportService.components.downloaders;
 
 
 import org.junit.jupiter.api.AfterEach;

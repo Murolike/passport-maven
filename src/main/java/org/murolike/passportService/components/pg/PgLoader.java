@@ -86,6 +86,7 @@ public class PgLoader {
         }
     }
 
+    // TODO getColumns должен возвращать
     /**
      * Генерация команды для запуска
      *
