@@ -234,3 +234,78 @@ databaseChangeLog:
               - column:
                   descending: false
                   name: number
+  - changeSet:
+      id: 14
+      author: murolike
+      changes:
+        - dropIndex:
+            indexName: idx_i_p_m_s_n
+            tableName: invalid_passports_master
+        - dropIndex:
+            indexName: idx_i_p_s_s_n
+            tableName: invalid_passports_slave
+        - dropIndex:
+            indexName: idx_t_p_s_n
+            tableName: tmp_passports
+  - changeSet:
+      id: 15
+      author: murolike
+      changes:
+        - sql:
+            dbms: 'postgresql'
+            sql: TRUNCATE TABLE invalid_passports_master;
+        - sql:
+            dbms: 'postgresql'
+            sql: TRUNCATE TABLE invalid_passports_slave;
+  - changeSet:
+      id: 16
+      author: murolike
+      changes:
+        - createSequence:
+            sequenceName: invalid_passports_id_seq
+            cycle: true
+            incrementBy: 1
+            minValue: 1
+            startValue: 1
+  - changeSet:
+      id: 17
+      author: murolike
+      changes:
+        - dropColumn:
+            tableName: invalid_passports_master
+            columnName: id
+        - dropColumn:
+            tableName: invalid_passports_slave
+            columnName: id
+  - changeSet:
+      id: 18
+      author: murolike
+      changes:
+        - addColumn:
+            tableName: invalid_passports_master
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+        - addColumn:
+            tableName: invalid_passports_slave
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+  - changeSet:
+      id: 19
+      author: murolike
+      changes:
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE invalid_passports_master ALTER COLUMN id SET DEFAULT nextval('invalid_passports_id_seq');
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE invalid_passports_slave ALTER COLUMN id SET DEFAULT nextval('invalid_passports_id_seq');
