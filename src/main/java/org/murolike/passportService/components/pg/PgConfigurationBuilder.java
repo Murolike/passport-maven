@@ -1,7 +1,10 @@
-package org.murolike.passportService.configurations;
+package org.murolike.passportService.components.pg;
 
 import java.util.Set;
 
+/**
+ * Класс для генерации PgConfiguration
+ */
 public class PgConfigurationBuilder {
 
     protected PgConfiguration configuration;

@@ -4,6 +4,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+/**
+ * Класс для логирование запросов к PassportService
+ */
 @Aspect
 @Component
 public class PassportLogRequestSearchBehavior extends LogRequestSearchBehavior {

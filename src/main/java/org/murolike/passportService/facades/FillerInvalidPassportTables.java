@@ -5,6 +5,9 @@ import org.murolike.passportService.services.SlavePassportService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Заливщик данных в таблицы с паспортами (master+slave)
+ */
 @Service
 public class FillerInvalidPassportTables {
 
@@ -16,6 +19,9 @@ public class FillerInvalidPassportTables {
         this.slavePassportService = slavePassportService;
     }
 
+    /**
+     * Обновление основной таблицы (master)
+     */
     @Transactional
     public void updateMasterPassports() {
         this.masterPassportService.deleteNotExistingInLoadingTable();
@@ -27,6 +33,9 @@ public class FillerInvalidPassportTables {
         this.masterPassportService.vacuumTable();
     }
 
+    /**
+     * Обновление дополнительной таблицы (slave)
+     */
     @Transactional
     public void updateSlavePassports() {
         this.slavePassportService.deleteNotExistingInLoadingTable();

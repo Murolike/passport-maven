@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Контроллер для работы с основной таблицей паспортов (slave)
+ */
 @RestController
 @RequestMapping("/v1/slave-passport")
 public class SlavePassportController {

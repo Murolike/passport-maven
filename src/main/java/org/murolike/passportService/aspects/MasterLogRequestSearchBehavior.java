@@ -3,6 +3,9 @@ package org.murolike.passportService.aspects;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
+/**
+ * Класс для логирование запросов к MasterPassportService
+ */
 @Aspect
 @Component
 public class MasterLogRequestSearchBehavior extends LogRequestSearchBehavior {

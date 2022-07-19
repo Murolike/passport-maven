@@ -2,8 +2,8 @@ package org.murolike.passportService.facades;
 
 import org.murolike.passportService.components.pg.DatabaseEnvironment;
 import org.murolike.passportService.components.pg.PgLoader;
-import org.murolike.passportService.configurations.PgConfiguration;
-import org.murolike.passportService.configurations.PgConfigurationBuilder;
+import org.murolike.passportService.components.pg.PgConfiguration;
+import org.murolike.passportService.components.pg.PgConfigurationBuilder;
 import org.murolike.passportService.enums.InvalidPassportTables;
 import org.murolike.passportService.components.pg.PgLoaderException;
 import org.murolike.passportService.schedules.PassportScheduleService;

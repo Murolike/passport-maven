@@ -20,7 +20,7 @@ public class ApacheBzip2 implements Archiver {
     }
 
     /**
-     * Метод для разорхивации файлов
+     * Распаковка файла
      *
      * @return Возвращает ссылку на единственный файл внутри
      * @throws IOException Возникает когда файл не был найден
@@ -44,7 +44,7 @@ public class ApacheBzip2 implements Archiver {
     /**
      * Создает временный файл с расширением
      *
-     * @return Возвращает файл
+     * @return Возвращает временный файл
      * @throws IOException Возникает, когда не удалось создать файл
      */
     protected File createFile() throws IOException {
@@ -53,7 +53,7 @@ public class ApacheBzip2 implements Archiver {
     }
 
     /**
-     * Метод возвращает полный путь до файла без расширения архива
+     * Получить полный путь до файла без архивного расширения
      *
      * @return Возвращает полный путь до файла
      */
@@ -62,6 +62,11 @@ public class ApacheBzip2 implements Archiver {
         return path.substring(0, path.lastIndexOf("."));
     }
 
+    /**
+     * Получить расширение файла
+     *
+     * @return Возращает расширение файла с точкой
+     */
     protected String getExtensionFile() {
         String path = this.getUncompressedFilePath();
         return path.substring(path.lastIndexOf("."));

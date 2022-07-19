@@ -22,6 +22,8 @@ public class ChannelDownloader implements Downloader {
     }
 
     /**
+     * Скачать и сохранить файл
+     *
      * @return Возвращает скаченный файл
      * @throws IOException Возникает, когда есть проблемы с созданием временного файла
      */

@@ -1,11 +1,8 @@
 package org.murolike.passportService.components.pg;
 
-import org.murolike.passportService.configurations.PgConfiguration;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.net.FileNameMap;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +24,18 @@ public class PgLoader {
                     " TARGET COLUMNS ({columns})\n" +
                     " WITH TRUNCATE, DROP INDEXES, SKIP HEADER = 1, fields terminated by ',', workers = 8, concurrency = 2;";
 
+    /**
+     * Команда для выполнения
+     */
     protected String pgLoaderCommand = "pgloader";
 
+    /**
+     * MIME тип для проверки перед загрузкой
+     */
     public static String CSV_MIME_TYPE = "text/csv";
 
     public PgLoader() {
     }
-
 
     /**
      * Выполняет заливку файла с настройками
@@ -68,6 +70,13 @@ public class PgLoader {
         }
     }
 
+    /**
+     * Проверка MIME типа расширения
+     *
+     * @param file Файл для заливки
+     * @throws IOException       Возникает, когда файла нет или есть проблемы
+     * @throws PgLoaderException Возникает, когда файл имеет неверный тип MIME
+     */
     protected void checkFileExtension(File file) throws IOException, PgLoaderException {
 
         String mimeType = Files.probeContentType(file.toPath());

@@ -11,6 +11,9 @@ import org.murolike.passportService.services.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Аспект, регистрирующий все запросы к контроллеру (логирование)
+ */
 @Aspect
 @Component
 abstract public class LogRequestSearchBehavior {
