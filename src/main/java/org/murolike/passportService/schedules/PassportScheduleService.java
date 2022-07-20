@@ -5,8 +5,6 @@ import org.murolike.passportService.components.pg.PgLoader;
 import org.murolike.passportService.facades.PassportLoader;
 import org.murolike.passportService.facades.ServiceFullTablePassportsUpdater;
 import org.murolike.passportService.facades.ServicePartialTablePassportsUpdater;
-import org.murolike.passportService.services.MasterPassportService;
-import org.murolike.passportService.services.SlavePassportService;
 import org.murolike.passportService.facades.FillerInvalidPassportTables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +26,6 @@ public class PassportScheduleService {
 
     @Autowired
     private PgLoader pgLoader;
-
-    @Autowired
-    private MasterPassportService masterPassportService;
-
-    @Autowired
-    private SlavePassportService slavePassportService;
 
     @Autowired
     private FillerInvalidPassportTables fillerInvalidPassportTables;
