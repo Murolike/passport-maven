@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fms-dev
+      PGDATA: /media/murolike/backup/PostgresqlDataDocker
+  backend:
+    container_name: dev-backend
+    build: .
+    image: dev-backend:latest
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/fms-dev
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_PROFILES_ACTIVE=dev
