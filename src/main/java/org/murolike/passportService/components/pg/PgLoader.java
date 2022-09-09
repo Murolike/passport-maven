@@ -1,5 +1,8 @@
 package org.murolike.passportService.components.pg;
 
+import org.murolike.passportService.schedules.PassportScheduleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -19,7 +22,7 @@ public class PgLoader {
      * Шаблонный файл для заливки
      */
     public static String DEFAULT_CMD_IMPORT =
-            " LOAD CSV FROM '{fileName}' WITH ENCODING UTF-8\n" +
+            " LOAD CSV FROM '{fileName}'\n" +
                     " INTO postgresql://{user}:{password}@{host}:{port}/{dbname}?tablename={tableName}\n" +
                     " TARGET COLUMNS ({columns})\n" +
                     " WITH TRUNCATE, DROP INDEXES, SKIP HEADER = 1, fields terminated by ',', workers = 8, concurrency = 2;";

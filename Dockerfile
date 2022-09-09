@@ -1,12 +1,13 @@
-FROM openjdk:8-jdk-alpine
+FROM eclipse-temurin:11
 
-#RUN apk add bzip2
-#WORKDIR /app
-#
-#COPY .mvn/ .mvn
-#COPY mvnw pom.xml ./
-#RUN ./mvnw dependency:go-offline
-#COPY src ./src
+RUN apt-get update && apt-get install -y bzip2 sqlite3 pgloader
+WORKDIR /app
 
-COPY target/passportService-*.jar passportService.jar
-ENTRYPOINT ["java","-jar","/passportService.jar"]
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+CMD /app
+
+#COPY target/passportService-*.jar passportService.jar
+#ENTRYPOINT ["java","-jar","passportService.jar"]

@@ -1,19 +1,19 @@
 services:
   db:
     image: postgres
-    restart: always
+    restart: "no"
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fms-test
+      POSTGRES_DB: fms-dev
       PGDATA: /media/murolike/backup/PostgresqlDataDocker
   backend:
-    container_name: test-backend
-    build: .
-    image: test-backend:latest
-    restart: always
+    container_name: dev-backend
+    build: ./
+    command: bash -c "./mvnw install"
+    restart: "no"
     ports:
       - 8080:8080
     links:
@@ -23,4 +23,4 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
-      - SPRING_PROFILES_ACTIVE=test
+      - SPRING_PROFILES_ACTIVE=dev

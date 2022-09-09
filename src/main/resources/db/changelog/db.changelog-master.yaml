@@ -3,28 +3,42 @@ databaseChangeLog:
       id: 1
       author: murolike
       changes:
+        - createSequence:
+            sequenceName: seq_invalid_passports_id
+            cycle: true
+            incrementBy: 1
+            minValue: 1
+            startValue: 1
+  - changeSet:
+      id: 2
+      author: murolike
+      changes:
         - createTable:
             tableName: invalid_passports_master
             columns:
               - column:
                   name: id
-                  type: serial
-                  autoIncrement: true
+                  type: int
+                  autoIncrement: false
                   constraints:
                     primaryKey: true
                     nullable: false
+                  defaultValueComputed: nextval('seq_invalid_passports_id')
               - column:
                   name: series
-                  type: varchar(255)
+                  type: varchar(10)
               - column:
                   name: number
-                  type: varchar(255)
+                  type: varchar(10)
               - column:
                   name: created_at
                   type: timestamp(6)
                   defaultValueDate: now()
+              - column:
+                  name: was_in_file_from_date
+                  type: timestamp(6)
   - changeSet:
-      id: 2
+      id: 3
       author: murolike
       changes:
         - createTable:
@@ -32,44 +46,27 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: serial
-                  autoIncrement: true
+                  type: int
+                  autoIncrement: false
                   constraints:
                     primaryKey: true
                     nullable: false
+                  defaultValueComputed: nextval('seq_invalid_passports_id')
               - column:
                   name: series
-                  type: varchar(255)
+                  type: varchar(10)
               - column:
                   name: number
-                  type: varchar(255)
+                  type: varchar(10)
               - column:
                   name: created_at
                   type: timestamp(6)
                   defaultValueDate: now()
-  - changeSet:
-      id: 3
-      author: murolike
-      changes:
-        - createView:
-            viewName: vw_passport
-            selectQuery: select COALESCE(ipm.series, ips.series) as series, COALESCE(ipm.number, ips.number) as number from  invalid_passports_master ipm  full join invalid_passports_slave ips on ips.series = ipm.series and ips.number = ipm.number
+              - column:
+                  name: was_in_file_from_date
+                  type: timestamp(6)
   - changeSet:
       id: 4
-      author: murolike
-      changes:
-        - dropView:
-            viewName: vw_passport
-        - createView:
-            viewName: vw_passport
-            replaceIfExists: true
-            selectQuery: "SELECT
-  row_number() over (order by COALESCE(ipm.created_at, ips.created_at)) as id, COALESCE(ipm.series, ips.series) AS series,
-  COALESCE(ipm.number, ips.number) AS number
-  FROM invalid_passports_master ipm
-  FULL JOIN invalid_passports_slave ips ON ips.series::text = ipm.series::text AND ips.number::text = ipm.number::text"
-  - changeSet:
-      id: 5
       author: murolike
       changes:
         - createTable:
@@ -83,11 +80,17 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
+                  name: search_in_table
+                  type: varchar(32)
+              - column:
+                  name: search_result
+                  type: text
+              - column:
                   name: series
-                  type: varchar(255)
+                  type: varchar(10)
               - column:
                   name: number
-                  type: varchar(255)
+                  type: varchar(10)
               - column:
                   name: request_ip
                   type: varchar(255)
@@ -97,234 +100,94 @@ databaseChangeLog:
                   name: created_at
                   type: timestamp(6)
                   defaultValueDate: now()
-  - changeSet:
-      id: 6
-      author: murolike
-      changes:
-        - addColumn:
-            tableName: log_request_search
-            columns:
-              - column:
-                  name: search_result
-                  type: text
               - column:
                   name: is_successful
                   type: int(1)
                   defaultValue: 1
   - changeSet:
-      id: 7
-      author: murolike
-      changes:
-        - addColumn:
-            tableName: log_request_search
-            columns:
-              - column:
-                  name: search_in_table
-                  type: varchar(255)
-        - update:
-            tableName: log_request_search
-            columns:
-              - column:
-                  name: search_in_table
-                  value: invalid_passports_master
-  - changeSet:
-      id: 8
+      id: 5
       author: murolike
       changes:
         - createTable:
             tableName: tmp_passports
             columns:
               - column:
-                  name: id
-                  type: serial
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: serial
-                  type: varchar(255)
+                  name: series
+                  type: varchar(10)
               - column:
                   name: number
-                  type: varchar(255)
-              - column:
-                  name: created_at
-                  type: timestamp(6)
-                  defaultValueDate: now()
+                  type: varchar(10)
   - changeSet:
-      id: 9
+      id: 6
       author: murolike
       changes:
-        - renameColumn:
-            tableName: tmp_passports
-            newColumnName: series
-            oldColumnName: serial
-  - changeSet:
-      id: 10
-      author: murolike
-      changes:
-        - addColumn:
-            tableName: invalid_passports_master
-            columns:
-              - column:
-                  name: last_date_on_file
-                  type: timestamp(6)
-        - addColumn:
-            tableName: invalid_passports_slave
-            columns:
-              - column:
-                  name: last_date_on_file
-                  type: timestamp(6)
-  - changeSet:
-      id: 11
-      author: murolike
-      changes:
-        - renameColumn:
-            tableName: invalid_passports_master
-            oldColumnName: last_date_on_file
-            newColumnName: was_in_file_from_date
-        - renameColumn:
-            tableName: invalid_passports_slave
-            oldColumnName: last_date_on_file
-            newColumnName: was_in_file_from_date
-  - changeSet:
-      id: 12
-      author: murolike
-      changes:
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE invalid_passports_master SET UNLOGGED;
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE invalid_passports_master SET (autovacuum_enabled = false);
         - sql:
             dbms: 'postgresql'
             sql: ALTER TABLE invalid_passports_master SET ( fillfactor = 20);
+
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE invalid_passports_slave SET UNLOGGED;
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE invalid_passports_slave SET (autovacuum_enabled = false);
         - sql:
             dbms: 'postgresql'
             sql: ALTER TABLE invalid_passports_slave SET ( fillfactor = 20);
+
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE tmp_passports SET UNLOGGED;
+        - sql:
+            dbms: 'postgresql'
+            sql: ALTER TABLE tmp_passports SET (autovacuum_enabled = false);
         - sql:
             dbms: 'postgresql'
             sql: ALTER TABLE tmp_passports SET ( fillfactor = 20);
   - changeSet:
-      id: 13
+      id: 7
       author: murolike
       changes:
-        - createIndex:
-            indexName: idx_i_p_m_s_n
-            tableName: invalid_passports_master
-            columns:
-              - column:
-                  descending: false
-                  name: series
-              - column:
-                  descending: false
-                  name: number
-        - createIndex:
-            indexName: idx_i_p_s_s_n
-            tableName: invalid_passports_slave
-            columns:
-              - column:
-                  descending: false
-                  name: series
-              - column:
-                  descending: false
-                  name: number
-        - createIndex:
-            indexName: idx_t_p_s_n
-            tableName: tmp_passports
-            columns:
-              - column:
-                  descending: false
-                  name: series
-              - column:
-                  descending: false
-                  name: number
-  - changeSet:
-      id: 14
-      author: murolike
-      changes:
-        - dropIndex:
-            indexName: idx_i_p_m_s_n
-            tableName: invalid_passports_master
-        - dropIndex:
-            indexName: idx_i_p_s_s_n
-            tableName: invalid_passports_slave
-        - dropIndex:
-            indexName: idx_t_p_s_n
-            tableName: tmp_passports
-  - changeSet:
-      id: 15
-      author: murolike
-      changes:
-        - sql:
-            dbms: 'postgresql'
-            sql: TRUNCATE TABLE invalid_passports_master;
-        - sql:
-            dbms: 'postgresql'
-            sql: TRUNCATE TABLE invalid_passports_slave;
-  - changeSet:
-      id: 16
-      author: murolike
-      changes:
-        - createSequence:
-            sequenceName: invalid_passports_id_seq
-            cycle: true
-            incrementBy: 1
-            minValue: 1
-            startValue: 1
-  - changeSet:
-      id: 17
-      author: murolike
-      changes:
-        - dropColumn:
-            tableName: invalid_passports_master
-            columnName: id
-        - dropColumn:
-            tableName: invalid_passports_slave
-            columnName: id
-  - changeSet:
-      id: 18
-      author: murolike
-      changes:
-        - addColumn:
-            tableName: invalid_passports_master
-            columns:
-              - column:
-                  name: id
-                  type: int
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-        - addColumn:
-            tableName: invalid_passports_slave
-            columns:
-              - column:
-                  name: id
-                  type: int
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-  - changeSet:
-      id: 19
-      author: murolike
-      changes:
-        - sql:
-            dbms: 'postgresql'
-            sql: ALTER TABLE invalid_passports_master ALTER COLUMN id SET DEFAULT nextval('invalid_passports_id_seq');
-        - sql:
-            dbms: 'postgresql'
-            sql: ALTER TABLE invalid_passports_slave ALTER COLUMN id SET DEFAULT nextval('invalid_passports_id_seq');
-  - changeSet:
-      id: 20
-      author: murolike
-      changes:
-        - dropView:
-            viewName: vw_passport
         - createView:
             viewName: vw_passport
             replaceIfExists: true
             selectQuery: "SELECT
-   COALESCE(ipm.id, ips.id) as id,
-   COALESCE(ipm.series, ips.series) AS series,
-   COALESCE(ipm.number, ips.number) AS number,
-   CASE 
-        WHEN ipm.id is NOT NULL THEN 'master' 
-        ELSE 'slave' 
-   END as source
-   FROM invalid_passports_master ipm
-   FULL JOIN invalid_passports_slave ips ON ips.series::text = ipm.series::text AND ips.number::text = ipm.number::text"
+    COALESCE(ipm.id, ips.id) as id,
+    COALESCE(ipm.series, ips.series) AS series,
+    COALESCE(ipm.number, ips.number) AS number,
+    CASE 
+         WHEN ipm.id is NOT NULL THEN 'master' 
+         ELSE 'slave' 
+    END as source
+    FROM invalid_passports_master ipm
+    FULL JOIN invalid_passports_slave ips ON ips.series::text = ipm.series::text AND ips.number::text = ipm.number::text"
+  - changeSet:
+      id: 8
+      author: murolike
+      changes:
+        - createIndex:
+            indexName: idx_i_p_m_s_n
+            tableName: invalid_passports_master
+            columns:
+              - column:
+                  name: series
+                  descending: false
+              - column:
+                  name: number
+                  descending: false
+        - createIndex:
+            indexName: idx_i_p_s_s_n
+            tableName: invalid_passports_slave
+            columns:
+              - column:
+                  name: series
+                  descending: false
+              - column:
+                  name: number
+                  descending: false

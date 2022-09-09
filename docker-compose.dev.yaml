@@ -1,19 +1,18 @@
 services:
   db:
     image: postgres
-    restart: always
+    restart: "no"
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: fms-dev
-      PGDATA: /media/murolike/backup/PostgresqlDataDocker
   backend:
     container_name: dev-backend
-    build: .
-    image: dev-backend:latest
-    restart: always
+    build: ./
+    command: bash -c "./mvnw clean install -Dmaven.test.skip && cp target/passportService-*.jar passportService.jar && java -jar passportService.jar"
+    restart: "no"
     ports:
       - 8080:8080
     links:

@@ -57,10 +57,9 @@ public class PassportScheduleService {
     public void partialTablePassportsUpdate() {
         try {
             PassportLoader loader = new PassportLoader(passportUpdateFileLink, System.getProperty("java.io.tmpdir") + "/");
-
             ServicePartialTablePassportsUpdater service = new ServicePartialTablePassportsUpdater(loader, environment, pgLoader, fillerInvalidPassportTables);
-
             service.run();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

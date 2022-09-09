@@ -71,6 +71,13 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>src/main/resources-files</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>*.bz2</include>
+                </includes>
+            </resource>
         </resources>
     </build>
     <profiles>
